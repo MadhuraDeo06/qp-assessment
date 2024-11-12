@@ -14,6 +14,14 @@ public class GroceryItems {
 	private String name;
 	private int quantity;
 	private String description;
+	
+	public GroceryItems(int id, String name, int quantity, String description) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.quantity = quantity;
+		this.description = description;
+	}
 	@Override
 	public String toString() {
 		return "GroceryItems [id=" + id + ", name=" + name + ", quantity=" + quantity + ", description=" + description

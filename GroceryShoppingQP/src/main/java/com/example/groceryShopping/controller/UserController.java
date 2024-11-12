@@ -27,7 +27,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/bookOrder")
-	public List<Order> bookNewOrder(@RequestBody List<Order> order){
+	public List<GroceryItems> bookNewOrder(@RequestBody List<Order> order){
 		return userService.bookNewOrder(order);
 	}
 

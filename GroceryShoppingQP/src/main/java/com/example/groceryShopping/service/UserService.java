@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.example.groceryShopping.entity.GroceryItems;
 import com.example.groceryShopping.entity.Order;
 import com.example.groceryShopping.entity.User;
+import com.example.groceryShopping.repository.AdminRepository;
 import com.example.groceryShopping.repository.GroceryRepository;
 import com.example.groceryShopping.repository.OrderRepository;
 import com.example.groceryShopping.repository.UserRepository;
@@ -29,6 +30,9 @@ public class UserService implements UserDetailsService {
 	
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private AdminService adminService;
 
 	@PostConstruct
     public void checkUserRepo() {
@@ -36,16 +40,22 @@ public class UserService implements UserDetailsService {
     }
 
 
-	public List<Order> bookNewOrder(List<Order> order) {
-		List<Order> newOrder = order;
-		int size = newOrder.size();
-		int j =0;
+	public List<GroceryItems> bookNewOrder(List<Order> order) {
+		List<GroceryItems> newOrder = new ArrayList<>();
 		List<GroceryItems> items = groceryRepo.findAll();
 		for(int i = 0; i < items.size(); i++) {
-			if(items.get(i).getId() == newOrder.get(j).getGroceryId() ) {
+			for(int j=0 ; j<order.size(); j++) {
+				if(items.get(i).getId() == order.get(j).getGroceryId() ) {
+					GroceryItems newGrocery = new GroceryItems(items.get(i).getId(),
+							items.get(i).getName(), items.get(i).getQuantity() - order.get(j).getOrderQuantity(),
+							items.get(i).getDescription());
+					adminService.updateGrocerDetails(items.get(i).getId(), newGrocery);
+					newOrder.add(items.get(i));
+				}
 				
 			}
 		}
+		orderRepo.saveAll(order);
 		return newOrder;
 	}
 
